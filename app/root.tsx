@@ -1,38 +1,26 @@
 import {
-  isRouteErrorResponse,
   Links,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
+  Link,
 } from "react-router";
 
-import type { Route } from "./+types/root";
+import type { ReactNode } from "react";
 import "./app.css";
 
-export const links: Route.LinksFunction = () => [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  {
-    rel: "preconnect",
-    href: "https://fonts.gstatic.com",
-    crossOrigin: "anonymous",
-  },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
-  },
-];
-
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ko">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
+
+      <body className="bg-gray-950 text-white">
         {children}
         <ScrollRestoration />
         <Scripts />
@@ -42,34 +30,27 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
-}
-
-export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
-  let stack: string | undefined;
-
-  if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
-    details =
-      error.status === 404
-        ? "The requested page could not be found."
-        : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
-    details = error.message;
-    stack = error.stack;
-  }
-
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
-      {stack && (
-        <pre className="w-full p-4 overflow-x-auto">
-          <code>{stack}</code>
-        </pre>
-      )}
-    </main>
+    <div className="min-h-screen">
+      <header className="bg-gray-900 px-10 py-5 flex justify-between items-center">
+        <Link to="/" className="text-2xl font-bold text-yellow-400">
+          🎬 MovieZone
+        </Link>
+
+        <nav className="flex gap-8">
+          <Link to="/" className="hover:text-yellow-400">
+            홈
+          </Link>
+
+          <Link to="/movies" className="hover:text-yellow-400">
+            영화 목록
+          </Link>
+        </nav>
+      </header>
+
+      <main className="max-w-6xl mx-auto px-6 py-12">
+        <Outlet />
+      </main>
+    </div>
   );
 }
